@@ -109,17 +109,26 @@ func TestBySvcMetrics(t *testing.T) {
 		}
 		expected := []metricsTest.ExpectedMetric{
 			{Name: metricPrefix + ".spans.recd", Value: 2},
-			{Name: metricPrefix + ".spans.by-svc." + test.serviceName, Value: 2},
 		}
 		if test.debug {
 			expected = append(expected, metricsTest.ExpectedMetric{
-				Name: metricPrefix + ".debug-spans.by-svc." + test.serviceName, Value: 2,
+				Name: metricPrefix + ".spans.by-svc." + test.serviceName, Tags: map[string]string{"debug": "true"}, Value: 2,
+			})
+		} else {
+			expected = append(expected, metricsTest.ExpectedMetric{
+				Name: metricPrefix + ".spans.by-svc." + test.serviceName, Value: 2,
 			})
 		}
 		if test.rootSpan {
-			expected = append(expected, metricsTest.ExpectedMetric{
-				Name: metricPrefix + ".traces.by-svc." + test.serviceName, Value: 2,
-			})
+			if test.debug {
+				expected = append(expected, metricsTest.ExpectedMetric{
+					Name: metricPrefix + ".traces.by-svc." + test.serviceName, Tags: map[string]string{"debug": "true"}, Value: 2,
+				})
+			} else {
+				expected = append(expected, metricsTest.ExpectedMetric{
+					Name: metricPrefix + ".traces.by-svc." + test.serviceName, Value: 2,
+				})
+			}
 		}
 		if test.serviceName != blackListedService || test.debug {
 			// "error.busy" and "spans.dropped" are both equivalent to a span being accepted,
