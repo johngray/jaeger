@@ -116,7 +116,7 @@ func TestBySvcMetrics(t *testing.T) {
 			})
 		} else {
 			expected = append(expected, metricsTest.ExpectedMetric{
-				Name: metricPrefix + ".spans.by-svc." + test.serviceName, Value: 2,
+				Name: metricPrefix + ".spans.by-svc." + test.serviceName, Tags: map[string]string{"debug": "false"}, Value: 2,
 			})
 		}
 		if test.rootSpan {
@@ -126,7 +126,7 @@ func TestBySvcMetrics(t *testing.T) {
 				})
 			} else {
 				expected = append(expected, metricsTest.ExpectedMetric{
-					Name: metricPrefix + ".traces.by-svc." + test.serviceName, Value: 2,
+					Name: metricPrefix + ".traces.by-svc." + test.serviceName, Tags: map[string]string{"debug": "false"}, Value: 2,
 				})
 			}
 		}

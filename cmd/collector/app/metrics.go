@@ -26,10 +26,6 @@ const (
 	maxServiceNames = 2000
 )
 
-var (
-	debugCounterTag = map[string]string{"debug": "true"}
-)
-
 // SpanProcessorMetrics contains all the necessary metrics for the SpanProcessor
 type SpanProcessorMetrics struct { //TODO - initialize metrics in the traditional factory way. Initialize map afterward.
 	// SaveLatency measures how long the actual save to storage takes
@@ -181,11 +177,11 @@ func (m *countsBySvc) countByServiceName(serviceName string, isDebug bool) {
 	m.lock.Lock()
 	if isDebug {
 		counter = getOrCreateCounter(m.debugCounts, func() metrics.Counter {
-			return m.factory.Counter(serviceName, debugCounterTag)
+			return m.factory.Counter(serviceName, map[string]string{"debug": "true"})
 		})
 	} else {
 		counter = getOrCreateCounter(m.counts, func() metrics.Counter {
-			return m.factory.Counter(serviceName, nil)
+			return m.factory.Counter(serviceName, map[string]string{"debug": "false"})
 		})
 	}
 	m.lock.Unlock()
