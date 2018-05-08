@@ -103,7 +103,7 @@
         },
         "vLong": {
           "type": "string",
-          "format": "uint64"
+          "format": "int64"
         },
         "vBinary": {
           "type": "string",
@@ -147,7 +147,8 @@
           "$ref": "#/definitions/jaegerTraceID"
         },
         "spanID": {
-          "$ref": "#/definitions/jaegerSpanID"
+          "type": "string",
+          "format": "uint64"
         },
         "operation_name": {
           "type": "string"
@@ -195,15 +196,6 @@
         }
       }
     },
-    "jaegerSpanID": {
-      "type": "object",
-      "properties": {
-        "Value": {
-          "type": "string",
-          "format": "uint64"
-        }
-      }
-    },
     "jaegerSpanRef": {
       "type": "object",
       "properties": {
@@ -211,9 +203,10 @@
           "$ref": "#/definitions/jaegerTraceID"
         },
         "spanID": {
-          "$ref": "#/definitions/jaegerSpanID"
+          "type": "string",
+          "format": "uint64"
         },
-        "type": {
+        "refType": {
           "$ref": "#/definitions/jaegerSpanRefType"
         }
       }

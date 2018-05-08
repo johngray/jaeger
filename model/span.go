@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"io"
 	"strconv"
-	"time"
 
 	"github.com/opentracing/opentracing-go/ext"
 )
@@ -31,11 +30,11 @@ const (
 	debugFlag = Flags(2)
 )
 
-// TraceID is a random 128bit identifier for a trace
-type TraceID struct {
-	Low  uint64 `json:"lo"`
-	High uint64 `json:"hi"`
-}
+// // TraceID is a random 128bit identifier for a trace
+// type TraceID struct {
+// 	Low  uint64 `json:"lo"`
+// 	High uint64 `json:"hi"`
+// }
 
 // Flags is a bit map of flags for a span
 type Flags uint32
@@ -44,20 +43,20 @@ type Flags uint32
 type SpanID uint64
 
 // Span represents a unit of work in an application, such as an RPC, a database call, etc.
-type Span struct {
-	TraceID       TraceID       `json:"traceID"`
-	SpanID        SpanID        `json:"spanID"`
-	ParentSpanID  SpanID        `json:"parentSpanID"`
-	OperationName string        `json:"operationName"`
-	References    []SpanRef     `json:"references,omitempty"`
-	Flags         Flags         `json:"flags,omitempty"`
-	StartTime     time.Time     `json:"startTime"`
-	Duration      time.Duration `json:"duration"`
-	Tags          []KeyValue    `json:"tags,omitempty"`
-	Logs          []Log         `json:"logs,omitempty"`
-	Process       *Process      `json:"process"`
-	Warnings      []string      `json:"warnings,omitempty"`
-}
+// type Span struct {
+// 	TraceID       TraceID       `json:"traceID"`
+// 	SpanID        SpanID        `json:"spanID"`
+// 	ParentSpanID  SpanID        `json:"parentSpanID"`
+// 	OperationName string        `json:"operationName"`
+// 	References    []SpanRef     `json:"references,omitempty"`
+// 	Flags         Flags         `json:"flags,omitempty"`
+// 	StartTime     time.Time     `json:"startTime"`
+// 	Duration      time.Duration `json:"duration"`
+// 	Tags          []KeyValue    `json:"tags,omitempty"`
+// 	Logs          []Log         `json:"logs,omitempty"`
+// 	Process       *Process      `json:"process"`
+// 	Warnings      []string      `json:"warnings,omitempty"`
+// }
 
 // Hash implements Hash from Hashable.
 func (s *Span) Hash(w io.Writer) (err error) {
@@ -128,7 +127,7 @@ func (f Flags) checkFlags(bit Flags) bool {
 
 // ------- TraceID -------
 
-func (t TraceID) String() string {
+func (t TraceID) AsString() string {
 	if t.High == 0 {
 		return fmt.Sprintf("%x", t.Low)
 	}
@@ -174,8 +173,9 @@ func (t *TraceID) UnmarshalText(text []byte) error {
 
 // ------- SpanID -------
 
-func (s SpanID) String() string {
-	return fmt.Sprintf("%x", uint64(s))
+// AsString converts SpanID to a hex string.
+func (s SpanID) AsString() string {
+	return fmt.Sprintf("%016x", uint64(s))
 }
 
 // SpanIDFromString creates a SpanID from a hexadecimal string
@@ -192,7 +192,7 @@ func SpanIDFromString(s string) (SpanID, error) {
 
 // MarshalText allows SpanID to serialize itself in JSON as a string.
 func (s SpanID) MarshalText() ([]byte, error) {
-	return []byte(s.String()), nil
+	return []byte(s.AsString()), nil
 }
 
 // UnmarshalText allows SpanID to deserialize itself from a JSON string.
